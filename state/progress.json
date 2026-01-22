@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "project_name": "mini-game-heaven",
     "started_at": "2026-01-22T00:53:15.417Z",
-    "updated_at": "2026-01-22T15:00:00.000Z",
+    "updated_at": "2026-01-22T20:00:00.000Z",
     "completed_at": null
   },
   "current_stage": "06-implementation",
@@ -89,8 +89,8 @@
       "bugs_fixed": ["BUG-001"],
       "sprints": {
         "total": 3,
-        "current": 2,
-        "completed": [1],
+        "current": 3,
+        "completed": [1, 2],
         "sprint_details": {
           "1": {
             "name": "Sprint 1: Foundation + Game 1",
@@ -103,19 +103,19 @@
           },
           "2": {
             "name": "Sprint 2: Games 2-3 + Backend",
-            "status": "in_progress",
-            "tasks_total": 14,
-            "tasks_completed": 0,
+            "status": "completed",
+            "tasks_total": 12,
+            "tasks_completed": 12,
             "started_at": "2026-01-22T15:00:00.000Z",
-            "completed_at": null,
-            "checkpoint_id": null
+            "completed_at": "2026-01-22T19:58:00.000Z",
+            "checkpoint_id": "checkpoint_20260122_195800_sprint2"
           },
           "3": {
             "name": "Sprint 3: PWA + Polish + Launch",
-            "status": "pending",
+            "status": "in_progress",
             "tasks_total": 16,
-            "tasks_completed": 0,
-            "started_at": null,
+            "tasks_completed": 13,
+            "started_at": "2026-01-22T20:00:00.000Z",
             "completed_at": null,
             "checkpoint_id": null
           }
