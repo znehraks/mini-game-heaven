@@ -1,0 +1,159 @@
+# claude-symphony AI Collaboration Configuration
+# Multi-AI orchestration modes and collaboration strategies
+
+collaboration_modes:
+  # Parallel Execution: Execute same task with multiple AIs simultaneously
+  parallel_execution:
+    description: "Execute same task with multiple AIs simultaneously and select best result"
+    enabled: true
+
+    stages:
+      - "01-brainstorm"
+      - "02-research"
+
+    models:
+      - "gemini"
+      - "claude"
+
+    merge_strategy:
+      type: "best_of_n"
+      selection_criteria:
+        - quality_score
+        - completeness
+        - creativity
+      require_human_review: true
+      auto_select_threshold: 0.85  # Auto-select when score is 85% or higher
+
+  # Sequential Handoff: Sequential transfer between AIs (review chain)
+  sequential_handoff:
+    description: "Sequential transfer between AIs for progressive result improvement"
+    enabled: true
+
+    chains:
+      code_review:
+        - model: "claude"
+          role: "Draft writing"
+          output: "draft.md"
+        - model: "gemini"
+          role: "Creative improvement"
+          output: "improved.md"
+        - model: "codex"
+          role: "Technical verification"
+          output: "verified.md"
+
+      planning_review:
+        - model: "gemini"
+          role: "Idea divergence"
+          output: "ideas.md"
+        - model: "claude"
+          role: "Feasibility analysis"
+          output: "analysis.md"
+        - model: "claude"
+          role: "Final plan formulation"
+          output: "plan.md"
+
+    handoff_format:
+      include:
+        - context
+        - key_decisions
+        - modifications
+        - next_instructions
+
+  # Debate Mode: AI debate to reach optimal conclusions
+  debate_mode:
+    description: "AI debate to reach optimal conclusions from diverse perspectives"
+    enabled: true
+
+    stages:
+      - "03-planning"
+      - "04-ui-ux"
+
+    participants:
+      - model: "claude"
+        role: "advocate"
+        perspective: "Technical feasibility"
+      - model: "gemini"
+        role: "challenger"
+        perspective: "Innovative approach"
+
+    rules:
+      rounds: 3
+      max_tokens_per_turn: 2000
+      require_evidence: true
+      convergence_check: true
+
+    output:
+      format: "structured_summary"
+      include_dissenting_opinions: true
+      final_decision_method: "consensus"  # or "vote", "weighted"
+
+# Task Type Mappings for Collaboration
+task_collaboration_mapping:
+  ideation:
+    mode: "parallel_execution"
+    models: ["gemini", "claude"]
+
+  analysis:
+    mode: "sequential_handoff"
+    chain: "planning_review"
+
+  implementation:
+    mode: null  # Single AI preferred
+    primary: "claude"
+
+  review:
+    mode: "sequential_handoff"
+    chain: "code_review"
+
+  architecture:
+    mode: "debate_mode"
+    participants: ["claude", "gemini"]
+
+# Collaboration Output Handling
+output_handling:
+  storage_path: "state/collaborations/"
+
+  merge_strategies:
+    best_of_n:
+      description: "Score-based best result selection"
+      scoring:
+        - metric: "completeness"
+          weight: 0.3
+        - metric: "quality"
+          weight: 0.4
+        - metric: "creativity"
+          weight: 0.3
+
+    consensus:
+      description: "Extract commonalities + merge differences"
+      conflict_resolution: "human_review"
+
+    synthesis:
+      description: "Extract best parts from all results to create new output"
+      synthesizer: "claude"
+
+# Collaboration Triggers
+triggers:
+  auto_collaborate:
+    on_low_confidence:
+      threshold: 0.7
+      action: "parallel_execution"
+
+    on_complex_task:
+      complexity_threshold: "high"
+      action: "debate_mode"
+
+    on_creative_task:
+      task_types: ["brainstorm", "design"]
+      action: "parallel_execution"
+
+# Resource Limits
+resource_limits:
+  max_concurrent_models: 2
+  total_token_budget_per_collaboration: 50000
+  timeout_per_model: 300  # 5 minutes
+
+  fallback:
+    on_timeout: "use_partial_results"
+    on_error: "single_model_fallback"
+    primary_fallback: "claude"

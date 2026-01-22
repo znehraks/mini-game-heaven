@@ -1,0 +1,229 @@
+# claude-symphony HANDOFF Intelligence Configuration
+# Smart context extraction and summarization
+
+smart_handoff:
+  enabled: true
+  description: "Automatic context extraction and intelligent HANDOFF generation"
+
+  # Auto extraction settings
+  auto_extraction:
+    enabled: true
+    description: "Auto-extract information to include in HANDOFF"
+
+    extract_from:
+      completed_tasks:
+        enabled: true
+        format: "checklist"
+        include_timestamps: true
+
+      key_decisions:
+        enabled: true
+        format: "decision_log"
+        include_rationale: true
+        include_alternatives: false
+
+      modified_files:
+        enabled: true
+        format: "file_list"
+        include_diff_summary: true
+        max_files: 20
+
+      pending_issues:
+        enabled: true
+        format: "issue_list"
+        priority_order: true
+
+      ai_call_history:
+        enabled: true
+        format: "table"
+        include_prompts: false  # Save tokens
+        include_results_summary: true
+
+    # Extraction priority (higher = first)
+    priority:
+      - blocking_issues: 100
+      - key_decisions: 90
+      - pending_issues: 80
+      - modified_files: 70
+      - completed_tasks: 60
+      - ai_call_history: 50
+
+  # Compression settings
+  compression:
+    enabled: true
+    strategy: "semantic"
+    description: "Semantic-based context compression"
+
+    max_tokens: 4000
+    compression_ratio_target: 0.3  # 30% of original
+
+    preserve:
+      always:
+        - "critical_decisions"
+        - "blocking_issues"
+        - "current_task"
+      conditionally:
+        - "file_changes"
+        - "test_results"
+
+    summarization:
+      enabled: true
+      method: "extractive"  # extractive or abstractive
+      model: "claude"
+
+  # Context transfer optimization
+  context_transfer:
+    format: "structured_markdown"
+
+    sections:
+      critical:
+        title: "Critical Context"
+        max_tokens: 1500
+        content:
+          - blocking_issues
+          - critical_decisions
+
+      primary:
+        title: "Primary Context"
+        max_tokens: 1500
+        content:
+          - current_task_state
+          - key_file_changes
+          - next_steps
+
+      secondary:
+        title: "Secondary Context"
+        max_tokens: 1000
+        content:
+          - completed_tasks_summary
+          - ai_call_summary
+
+    # Highlight information immediately needed by next stage
+    highlight:
+      enabled: true
+      marker: "!!"
+      content:
+        - immediate_actions
+        - required_inputs
+
+# Contextual summarization settings
+contextual_summarization:
+  enabled: true
+  description: "Generate stage-specific customized summaries"
+
+  strategies:
+    completed_tasks:
+      method: "bullet_points"
+      max_items: 10
+      grouping: "by_type"  # by_type, by_priority, chronological
+
+    file_changes:
+      method: "impact_analysis"
+      include:
+        - file_path
+        - change_type
+        - impact_scope
+      exclude_patterns:
+        - "*.log"
+        - "*.tmp"
+        - "node_modules/*"
+
+    decisions:
+      method: "structured"
+      format: |
+        **Decision**: {{decision}}
+        **Rationale**: {{rationale}}
+        **Impact**: {{impact}}
+
+    next_steps:
+      method: "actionable"
+      format: "numbered_list"
+      include_prerequisites: true
+
+  # Stage-specific summary focus
+  stage_focus:
+    "01-brainstorm":
+      emphasize: ["ideas", "requirements"]
+      de_emphasize: ["technical_details"]
+
+    "06-implementation":
+      emphasize: ["code_changes", "technical_decisions"]
+      de_emphasize: ["ideation"]
+
+    "08-qa":
+      emphasize: ["bugs", "test_results"]
+      de_emphasize: ["planning_details"]
+
+# HANDOFF template settings
+templates:
+  default:
+    sections:
+      - name: "Summary"
+        required: true
+        auto_generate: true
+
+      - name: "Completed Tasks"
+        required: true
+        auto_generate: true
+
+      - name: "Key Decisions"
+        required: true
+        auto_generate: true
+
+      - name: "Modified Files"
+        required: false
+        auto_generate: true
+
+      - name: "Pending Issues"
+        required: false
+        auto_generate: true
+
+      - name: "Next Steps"
+        required: true
+        auto_generate: true
+
+      - name: "AI Call History"
+        required: false
+        auto_generate: true
+
+  # Compact template for stage transitions
+  compact:
+    max_tokens: 2000
+    sections:
+      - name: "Critical"
+        required: true
+      - name: "Next Actions"
+        required: true
+
+  # Detailed template for session recovery
+  recovery:
+    max_tokens: 6000
+    sections:
+      - name: "Full Context"
+        required: true
+      - name: "Step-by-Step Recovery"
+        required: true
+
+# Quality assurance
+quality_assurance:
+  validation:
+    check_completeness: true
+    check_consistency: true
+    check_actionability: true
+
+  scoring:
+    enabled: true
+    criteria:
+      - clarity: 0.3
+      - completeness: 0.3
+      - actionability: 0.4
+
+    minimum_score: 0.7
+
+  auto_improve:
+    enabled: true
+    max_iterations: 2
+    improvement_prompts:
+      low_clarity: "Rewrite this section more clearly."
+      low_completeness: "Information is missing. Please add: {{missing}}"
+      low_actionability: "Convert next steps into more specific actions."

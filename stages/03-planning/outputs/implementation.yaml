@@ -1,0 +1,467 @@
+# Implementation Rules: Mini-Game Heaven
+# Generated: 2026-01-22
+# Stage: 03-planning
+#
+# This file defines project-specific implementation rules
+# Referenced during Implementation stage (06)
+
+project:
+  name: "mini-game-heaven"
+  created_at: "2026-01-22"
+  description: "Web arcade with mini games for Korean teenagers"
+  tech_stack: "Next.js 14 + Phaser 3 + Supabase + Tailwind"
+
+# Component Rules
+components:
+  # Component type: React functional components only
+  type: "functional"
+
+  # Export style: Named exports for better tree-shaking
+  export: "named"
+
+  # One component per file
+  single_component_per_file: true
+
+  # Props definition: TypeScript interfaces
+  props_definition: "interface"
+
+  # Default component structure
+  structure: |
+    'use client'; // Only if needed (game components, hooks)
+
+    // External imports
+    import { useState, useEffect } from 'react';
+
+    // Internal imports
+    import { cn } from '@/lib/utils';
+
+    // Types
+    interface ComponentNameProps {
+      // props
+    }
+
+    // Component
+    export function ComponentName({ ...props }: ComponentNameProps) {
+      return (
+        // JSX
+      );
+    }
+
+  # Game component specific structure
+  game_component_structure: |
+    'use client';
+
+    import dynamic from 'next/dynamic';
+    import { Suspense } from 'react';
+    import { GameSkeleton } from '@/components/ui/GameSkeleton';
+
+    const GameCanvas = dynamic(() => import('./GameCanvas'), {
+      ssr: false,
+      loading: () => <GameSkeleton />
+    });
+
+    export function GameLoader() {
+      return (
+        <Suspense fallback={<GameSkeleton />}>
+          <GameCanvas />
+        </Suspense>
+      );
+    }
+
+# Styling Rules
+styling:
+  # Primary approach: Tailwind CSS
+  approach: "tailwind"
+
+  # With cn() utility for conditional classes
+  utility: "clsx + tailwind-merge"
+
+  # File location: Colocated (component.tsx + styles in same folder if needed)
+  location: "colocated"
+
+  # Global styles location
+  global_styles: "src/app/globals.css"
+
+  # CSS variables: Yes, defined in Tailwind config
+  css_variables: true
+
+  # Color palette (from tech_stack.md)
+  colors:
+    neon_pink: "#ff00ff"
+    neon_cyan: "#00ffff"
+    neon_purple: "#8b5cf6"
+    arcade_dark: "#0a0a0f"
+    arcade_darker: "#050508"
+
+  # Font
+  fonts:
+    arcade: "'Press Start 2P', monospace"
+    body: "system-ui, sans-serif"
+
+# State Management Rules
+state_management:
+  # Global client state: Zustand
+  global: "zustand"
+
+  # Server state: TanStack Query
+  server: "tanstack-query"
+
+  # Local component state: useState/useReducer
+  local: "useState"
+
+  # Store organization
+  stores:
+    - name: "gameStore"
+      purpose: "Current game state (score, lives, isPlaying)"
+    - name: "userStore"
+      purpose: "User preferences (sound, theme)"
+    - name: "uiStore"
+      purpose: "UI state (modals, toasts)"
+
+  # Query keys convention
+  query_keys:
+    pattern: "['resource', identifier?, filters?]"
+    examples:
+      - "['leaderboard', gameId]"
+      - "['user', userId]"
+      - "['games']"
+
+# File/Folder Naming
+file_naming:
+  # Component files: PascalCase
+  components: "PascalCase"
+  examples_components:
+    - "GameCard.tsx"
+    - "LeaderboardTable.tsx"
+    - "NeonTowerStack.tsx"
+
+  # Hook files: camelCase with 'use' prefix
+  hooks: "camelCase"
+  examples_hooks:
+    - "useGameStore.ts"
+    - "useLeaderboard.ts"
+    - "useAuth.ts"
+
+  # Utility files: camelCase
+  utilities: "camelCase"
+  examples_utilities:
+    - "formatScore.ts"
+    - "validateScore.ts"
+    - "cn.ts"
+
+  # Constants: SCREAMING_SNAKE_CASE
+  constants: "SCREAMING_SNAKE_CASE"
+  examples_constants:
+    - "GAME_CONFIG.ts"
+    - "API_ROUTES.ts"
+
+  # Test files: {name}.test.{ext}
+  tests: "{name}.test.{ext}"
+
+  # Phaser game files: PascalCase
+  phaser_scenes: "PascalCase"
+  examples_phaser:
+    - "NeonTowerScene.ts"
+    - "GravitySwitcherScene.ts"
+
+# Folder Structure
+folder_structure:
+  # Type: Feature-based with game modules
+  type: "feature-based"
+
+  # Structure
+  structure: |
+    mini-game-heaven/           # PROJECT_ROOT
+    ├── src/
+    │   ├── app/                # Next.js App Router
+    │   │   ├── (auth)/         # Auth route group
+    │   │   │   ├── login/
+    │   │   │   └── callback/
+    │   │   ├── games/
+    │   │   │   └── [gameId]/   # Dynamic game routes
+    │   │   ├── leaderboard/
+    │   │   ├── profile/
+    │   │   ├── layout.tsx
+    │   │   ├── page.tsx        # Home (game selection)
+    │   │   └── globals.css
+    │   │
+    │   ├── components/
+    │   │   ├── ui/             # Reusable UI components
+    │   │   │   ├── Button.tsx
+    │   │   │   ├── Card.tsx
+    │   │   │   ├── Modal.tsx
+    │   │   │   └── Toast.tsx
+    │   │   ├── game/           # Game-related components
+    │   │   │   ├── GameCard.tsx
+    │   │   │   ├── GameLoader.tsx
+    │   │   │   ├── ScoreDisplay.tsx
+    │   │   │   └── GameOverModal.tsx
+    │   │   ├── leaderboard/
+    │   │   │   ├── LeaderboardTable.tsx
+    │   │   │   └── LeaderboardRow.tsx
+    │   │   └── layout/
+    │   │       ├── Header.tsx
+    │   │       ├── Footer.tsx
+    │   │       └── Navigation.tsx
+    │   │
+    │   ├── games/              # Phaser game modules
+    │   │   ├── neon-tower/
+    │   │   │   ├── NeonTowerScene.ts
+    │   │   │   ├── config.ts
+    │   │   │   └── index.ts
+    │   │   ├── gravity-switcher/
+    │   │   │   ├── GravitySwitcherScene.ts
+    │   │   │   ├── config.ts
+    │   │   │   └── index.ts
+    │   │   └── color-rush/
+    │   │       ├── ColorRushScene.ts
+    │   │       ├── config.ts
+    │   │       └── index.ts
+    │   │
+    │   ├── hooks/
+    │   │   ├── useAuth.ts
+    │   │   ├── useGameStore.ts
+    │   │   ├── useLeaderboard.ts
+    │   │   └── usePushNotification.ts
+    │   │
+    │   ├── lib/
+    │   │   ├── supabase/
+    │   │   │   ├── client.ts   # Browser client
+    │   │   │   ├── server.ts   # Server client
+    │   │   │   └── middleware.ts
+    │   │   ├── phaser/
+    │   │   │   └── createGame.ts
+    │   │   └── utils/
+    │   │       ├── cn.ts       # Class name utility
+    │   │       └── formatters.ts
+    │   │
+    │   ├── stores/
+    │   │   ├── gameStore.ts
+    │   │   ├── userStore.ts
+    │   │   └── uiStore.ts
+    │   │
+    │   └── types/
+    │       ├── game.ts
+    │       ├── user.ts
+    │       ├── leaderboard.ts
+    │       └── database.ts     # Supabase generated types
+    │
+    ├── public/
+    │   ├── icons/              # PWA icons
+    │   ├── sounds/             # Game sounds
+    │   └── manifest.json       # PWA manifest
+    │
+    ├── supabase/
+    │   ├── migrations/         # Database migrations
+    │   └── functions/          # Edge functions
+    │       └── validate-score/
+    │
+    └── tests/
+        ├── unit/
+        ├── integration/
+        └── e2e/
+
+# API Rules (Supabase)
+api:
+  # Client: Supabase JS client (not axios)
+  client: "supabase-js"
+
+  # API location: lib/supabase + hooks
+  location: "lib + hooks"
+
+  # Server actions for mutations
+  mutations: "server-actions"
+
+  # Error handling: Centralized with toast notifications
+  error_handling: "centralized"
+
+  # Realtime subscriptions: In TanStack Query hooks
+  realtime: "tanstack-query-hooks"
+
+# Error Handling Rules
+error_handling:
+  # Error Boundary: Yes, for game components
+  error_boundary: true
+  error_boundary_scope:
+    - "game components"
+    - "route segments"
+
+  # Logging: Console in dev, service in prod
+  logging: "console"  # Will add service later
+
+  # User notification: Toast
+  user_notification: "toast"
+
+  # Specific error types
+  error_types:
+    - name: "GameError"
+      handling: "Show game over, allow retry"
+    - name: "AuthError"
+      handling: "Redirect to login"
+    - name: "NetworkError"
+      handling: "Show toast, allow retry"
+    - name: "ScoreSubmitError"
+      handling: "Queue for retry, notify user"
+
+# Testing Rules
+testing:
+  # Unit test framework: Vitest
+  framework: "vitest"
+
+  # E2E framework: Playwright
+  e2e: "playwright"
+
+  # Coverage target: 80% for MVP
+  coverage_target: 80
+
+  # Required tests
+  required:
+    - "unit"  # Utilities, stores
+    - "integration"  # API calls, hooks
+
+  # Optional for MVP
+  optional:
+    - "e2e"  # Full user flows
+
+  # Test file location: Colocated with source
+  location: "colocated"
+
+# Code Quality Rules
+code_quality:
+  # Linter: ESLint with Next.js config
+  linter: "eslint"
+  eslint_config: "next/core-web-vitals"
+
+  # Formatter: Prettier
+  formatter: "prettier"
+
+  # TypeScript: Strict mode
+  type_check: "strict"
+
+  # Pre-commit hooks: Husky + lint-staged
+  commit_hooks: true
+
+  # Strict null checks
+  strict_null_checks: true
+
+# Documentation Rules
+documentation:
+  # JSDoc: For complex functions only
+  jsdoc: true
+  jsdoc_scope: "complex functions, public APIs"
+
+  # README: Project root only for MVP
+  readme_per_feature: false
+
+  # Component docs: None for MVP (later Storybook)
+  component_docs: "none"
+
+# Prohibited Practices
+prohibited:
+  - "any type (use unknown + type guards instead)"
+  - "console.log in production code"
+  - "inline styles (use Tailwind)"
+  - "magic numbers (use constants)"
+  - "nested ternary operators (> 1 level)"
+  - "var keyword"
+  - "class components (use functional)"
+  - "default exports (use named)"
+  - "barrel files in app/ directory"
+  - "direct DOM manipulation (except in Phaser)"
+
+# Recommended Practices
+recommended:
+  - "Early return pattern"
+  - "Descriptive variable/function names"
+  - "Small functions (< 30 lines)"
+  - "Composition over inheritance"
+  - "Immutable data patterns"
+  - "Async/await over .then()"
+  - "Optional chaining (?.) and nullish coalescing (??)"
+  - "Object destructuring for props"
+  - "useMemo/useCallback for expensive operations"
+  - "Suspense boundaries for loading states"
+
+# Phaser-Specific Rules
+phaser:
+  # Scene naming: {GameName}Scene
+  scene_naming: "{GameName}Scene"
+
+  # Config location: games/{game}/config.ts
+  config_location: "games/{game}/config.ts"
+
+  # Asset loading: Preload scene
+  asset_loading: "preload method"
+
+  # State communication: Custom events + Zustand
+  state_communication: "events + zustand"
+
+  # Cleanup: Destroy game instance on unmount
+  cleanup: "mandatory"
+
+# Performance Rules
+performance:
+  # Image optimization: Next.js Image component
+  images: "next/image"
+
+  # Code splitting: Dynamic imports for games
+  code_splitting: true
+
+  # Lazy loading: For non-critical components
+  lazy_loading: true
+
+  # Caching: PWA service worker
+  caching: "service-worker"
+
+  # Bundle analysis: Enable in build
+  bundle_analysis: true
+
+# Accessibility Rules (a11y)
+accessibility:
+  # Semantic HTML: Required
+  semantic_html: true
+
+  # ARIA labels: For interactive elements
+  aria_labels: true
+
+  # Keyboard navigation: Required for menus
+  keyboard_navigation: true
+
+  # Focus management: For modals
+  focus_management: true
+
+  # Note: Games may have limited a11y
+  games_exemption: "Phaser canvas games exempt from full a11y"
+
+# Git Commit Rules
+git:
+  # Conventional commits
+  format: "conventional"
+
+  # Types for this project
+  types:
+    - "feat: New feature"
+    - "fix: Bug fix"
+    - "refactor: Code refactoring"
+    - "style: Styling changes"
+    - "test: Test additions"
+    - "docs: Documentation"
+    - "chore: Maintenance"
+    - "game: Game-specific changes"
+
+  # Scope examples
+  scopes:
+    - "auth"
+    - "leaderboard"
+    - "game"
+    - "ui"
+    - "pwa"
+    - "neon-tower"
+    - "gravity-switcher"
+    - "color-rush"
+
+  # Example commits
+  examples:
+    - "feat(game): add Neon Tower Stack game"
+    - "fix(leaderboard): fix realtime subscription leak"
+    - "style(ui): update neon color palette"
