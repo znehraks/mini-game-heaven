@@ -1,162 +1,102 @@
-# Stage 06: Implementation → Stage 07: Refactoring
+# HANDOFF: 06-implementation → 07-refactoring
 
-## HANDOFF Document
-**Generated**: 2026-01-22T14:11:00Z
-**Checkpoint**: `checkpoint_20260122_141112_impl`
-
----
-
-## Completed Work Summary
-
-### Sprint 1: Foundation (TASK-1 ~ TASK-22) ✅ COMPLETE
-
-#### Setup Epic (TASK-1 ~ 7) ✅
-- [x] TASK-1: Next.js 15 project initialization
-- [x] TASK-2: TypeScript strict mode configuration
-- [x] TASK-3: Tailwind CSS + arcade design tokens
-- [x] TASK-4: ESLint + Prettier + Husky
-- [x] TASK-5: Supabase connection setup
-- [x] TASK-6: Database schema (games, scores, profiles)
-- [x] TASK-7: Folder structure (App Router pattern)
-
-#### Components Epic (TASK-8 ~ 17) ✅
-- [x] Button component with variants
-- [x] Header with navigation
-- [x] BottomNav mobile navigation
-- [x] GameCard with thumbnail display
-- [x] Modal component
-- [x] Toast notification system
-- [x] Layout components
-- [x] Home page
-- [x] Game page with dynamic routing
-- [x] Zustand store (game, ui stores)
-
-#### Game Dev Epic (TASK-18 ~ 22) ✅
-- [x] Phaser 3 integration with dynamic import
-- [x] GameLoader component
-- [x] GameHUD overlay
-- [x] Neon Tower Stack game (fully playable)
+> Generated: 2026-01-23
+> Stage: 06-implementation
+> Status: COMPLETED
 
 ---
 
-## Key Decisions Made
+## Summary
+
+Mini Game Heaven 프로젝트의 핵심 구현 단계가 완료되었습니다. 3개의 Sprint를 통해 전체 애플리케이션의 기본 기능이 구현되었습니다.
+
+---
+
+## Completed Work
+
+### Sprint 1: Foundation + Game 1 (22/22 tasks) ✅
+- Next.js 15 + Tailwind CSS v4 프로젝트 설정
+- Supabase 연동 및 초기 스키마
+- 아케이드 스타일 디자인 시스템
+- Header, BottomNav, GameCard 컴포넌트
+- Neon Tower 게임 (Phaser 3)
+- 점수 시스템 및 게임 상태 관리
+
+### Sprint 2: Games 2-3 + Backend (12/12 tasks) ✅
+- Gravity Switcher 게임
+- Color Rush 게임
+- Discord OAuth 인증
+- Profile 페이지
+- Leaderboard 페이지 및 테이블
+- Settings 모달
+- PWA manifest + Service Worker
+- Offline IndexedDB 저장
+
+### Sprint 3: PWA + Polish (13/16 tasks) ✅
+- VAPID 키 생성 및 Push API
+- Push 알림 UI (Prompt, Toggle)
+- Nemesis 감지 Edge Function
+- Push 전송 Edge Function
+- 알림 클릭 딥링크 처리
+- Error Boundary 컴포넌트
+- Loading Skeleton 컴포넌트
+- SEO (sitemap, robots, Open Graph)
+- UI 애니메이션 (glitch, scanline, blink 등)
+- Next.js 성능 최적화
+- Vercel 배포 설정
+- 환경변수 문서화
+
+---
+
+## Key Technical Decisions
 
 | Decision | Rationale |
 |----------|-----------|
-| Next.js 15 App Router | Server components, streaming SSR |
-| Phaser 3 dynamic import | Client-only game engine, no SSR |
-| Zustand over Redux | Simpler API, smaller bundle |
-| Tailwind design tokens | Consistent arcade theme |
-| `unoptimized` for external images | placehold.co compatibility |
+| Next.js 15 App Router | 최신 React 서버 컴포넌트 지원 |
+| Tailwind CSS v4 | CSS-first 설정, 빠른 빌드 |
+| Phaser 3 (Dynamic Import) | SSR 호환성, 번들 분리 |
+| Supabase | 실시간 리더보드, Auth, Edge Functions |
+| Zustand | 가벼운 상태 관리 |
+| IndexedDB (idb) | 오프라인 점수 저장 |
+| Web Push API | 네이티브 푸시 알림 |
 
 ---
 
-## Bugs Fixed
+## Remaining Tasks (Assigned to Other Stages)
 
-### BUG-001: Game Thumbnail Not Displaying ✅
-- **Root Cause**: Missing `sizes`, `onError`, `unoptimized` props on Next.js Image
-- **Solution**:
-  - Added `useState` for error handling
-  - Added `sizes` prop for responsive optimization
-  - Added `onError` handler with fallback UI
-  - Added `unoptimized` prop for external URLs
-  - Simplified placehold.co URLs (removed font parameter)
-- **Files Modified**:
-  - `src/components/game/GameCard.tsx`
-  - `src/config/games.ts`
+| Task | Assigned Stage | Priority |
+|------|----------------|----------|
+| UI 폴리시 및 애니메이션 추가 | 07-refactoring | Should |
+| 성능 최적화 (Lighthouse 90+) | 07-refactoring | Should |
+| 번들 크기 최적화 | 07-refactoring | Could |
+| E2E 테스트 작성 (Playwright) | 09-testing | Must |
+| 컴포넌트 단위 테스트 (Vitest) | 09-testing | Should |
 
 ---
 
-## File Structure
+## Known Issues
 
-```
-app/
-├── src/
-│   ├── app/              # Next.js App Router
-│   │   ├── layout.tsx
-│   │   ├── page.tsx      # Home
-│   │   └── games/[gameId]/page.tsx
-│   ├── components/
-│   │   ├── ui/           # Button, Modal, Toast
-│   │   ├── game/         # GameCard, GameLoader, GameHUD
-│   │   └── layout/       # Header, BottomNav
-│   ├── games/
-│   │   └── neon-tower/   # Phaser game scenes
-│   ├── stores/           # Zustand stores
-│   ├── config/           # Game configurations
-│   ├── lib/              # Supabase client
-│   └── types/            # TypeScript types
-├── supabase/
-│   └── migrations/       # Database schema
-└── public/               # Static assets
-```
+1. **Phaser 게임 미완성**: Gravity Switcher, Color Rush 게임 로직 구현 필요
+2. **OG Image 없음**: /public/og-image.png 생성 필요
+3. **Icon 파일 미완성**: icon-192.png, icon-512.png 생성 필요
 
 ---
 
-## Verification Results
+## Checkpoint Reference
 
-| Check | Status |
-|-------|--------|
-| TypeScript | ✅ Passed |
-| ESLint | ✅ Passed |
-| Build | ✅ Passed |
-| Dev Server | ✅ Working |
+- checkpoint_20260122_141112_impl - Sprint 1 완료
+- checkpoint_20260122_195800_sprint2 - Sprint 2 완료
 
 ---
 
-## Pending for Next Stage (07-Refactoring)
+## Next Stage Instructions
 
-### Recommended Refactoring Tasks
-
-1. **Code Organization**
-   - Extract shared Phaser utilities
-   - Create game scene base class
-   - Consolidate type definitions
-
-2. **Performance Optimization**
-   - Lazy load game modules
-   - Optimize Tailwind purge
-   - Add image placeholders/blur
-
-3. **Code Quality**
-   - Add JSDoc comments to public APIs
-   - Extract magic numbers to constants
-   - Improve error boundaries
-
-4. **Testing Preparation**
-   - Add `data-testid` attributes (partially done)
-   - Configure Playwright (TASK-T1~T3 pending)
+### 07-refactoring 목표
+1. 코드 품질 개선 및 리팩토링
+2. 성능 최적화 (Lighthouse 90+ 목표)
+3. 번들 크기 최적화
+4. UI 애니메이션 정교화
 
 ---
 
-## AI Call Log
-
-| AI | Time | Task | Status |
-|----|------|------|--------|
-| Claude | 14:00 | BUG-001 analysis | ✅ Success |
-| Claude | 14:05 | GameCard.tsx fix | ✅ Success |
-| Claude | 14:08 | games.ts URL fix | ✅ Success |
-| Claude | 14:10 | Verification | ✅ Success |
-
----
-
-## Recovery Instructions
-
-1. Read this HANDOFF.md
-2. Reference checkpoint: `state/checkpoints/checkpoint_20260122_141112_impl/`
-3. Load `stages/07-refactoring/CLAUDE.md`
-4. Review codebase for refactoring opportunities
-5. Focus on code quality improvements
-
----
-
-## Next Stage Entry Point
-
-```bash
-# Load Stage 07
-cat stages/07-refactoring/CLAUDE.md
-
-# Run code analysis
-npm run lint
-npm run typecheck
-```
+*Generated by claude-symphony pipeline*

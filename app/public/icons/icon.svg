@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#050508"/>
+  <circle cx="256" cy="200" r="80" fill="#00FFFF" opacity="0.8"/>
+  <rect x="156" y="300" width="200" height="120" rx="20" fill="#FF00FF" opacity="0.8"/>
+  <circle cx="196" cy="360" r="25" fill="#050508"/>
+  <circle cx="316" cy="360" r="25" fill="#050508"/>
+  <text x="256" y="450" text-anchor="middle" fill="#00FFFF" font-family="monospace" font-size="36" font-weight="bold">MGH</text>
+</svg>

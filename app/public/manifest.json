@@ -1,0 +1,42 @@
+{
+  "name": "Mini Game Heaven",
+  "short_name": "MiniGames",
+  "description": "Play addictive arcade mini games and compete for the top scores!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050508",
+  "theme_color": "#050508",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Leaderboard",
+      "short_name": "Ranks",
+      "description": "View the leaderboard",
+      "url": "/leaderboard"
+    },
+    {
+      "name": "Profile",
+      "short_name": "Profile",
+      "description": "View your profile",
+      "url": "/profile"
+    }
+  ],
+  "prefer_related_applications": false
+}

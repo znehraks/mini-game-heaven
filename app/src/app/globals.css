@@ -1,0 +1,428 @@
+@import 'tailwindcss';
+
+/* Mini-Game Heaven Design Tokens */
+:root {
+  /* Neon Colors */
+  --neon-pink: #ff00ff;
+  --neon-cyan: #00ffff;
+  --neon-purple: #8b5cf6;
+  --neon-yellow: #fbbf24;
+  --neon-green: #22c55e;
+
+  /* Background Colors */
+  --arcade-dark: #0a0a0f;
+  --arcade-darker: #050508;
+  --arcade-surface: #12121a;
+  --arcade-border: #2a2a3a;
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+
+  /* Game UI */
+  --game-success: #22c55e;
+  --game-danger: #ef4444;
+  --game-warning: #f59e0b;
+  --game-info: #3b82f6;
+
+  /* Glow Effects */
+  --glow-pink: 0 0 20px rgba(255, 0, 255, 0.5);
+  --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.5);
+  --glow-purple: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Tailwind v4 Theme Configuration */
+@theme inline {
+  /* Colors */
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-yellow: var(--neon-yellow);
+  --color-neon-green: var(--neon-green);
+
+  --color-arcade-dark: var(--arcade-dark);
+  --color-arcade-darker: var(--arcade-darker);
+  --color-arcade-surface: var(--arcade-surface);
+  --color-arcade-border: var(--arcade-border);
+
+  --color-game-success: var(--game-success);
+  --color-game-danger: var(--game-danger);
+  --color-game-warning: var(--game-warning);
+  --color-game-info: var(--game-info);
+
+  /* Fonts */
+  --font-arcade: 'Press Start 2P', monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+
+  /* Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* Spacing Scale */
+  --spacing-game: 1rem;
+  --spacing-game-lg: 1.5rem;
+
+  /* Border Radius */
+  --radius-game: 0.5rem;
+  --radius-game-lg: 1rem;
+}
+
+/* Base Styles */
+body {
+  background: var(--arcade-darker);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--arcade-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--arcade-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-purple);
+}
+
+/* Neon Glow Utilities */
+.glow-pink {
+  box-shadow: var(--glow-pink);
+}
+
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.glow-purple {
+  box-shadow: var(--glow-purple);
+}
+
+/* Text Glow */
+.text-glow-pink {
+  text-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    0 0 30px var(--neon-pink);
+}
+
+.text-glow-cyan {
+  text-shadow:
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan),
+    0 0 30px var(--neon-cyan);
+}
+
+/* Animation Keyframes */
+@keyframes pulse-neon {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-1 {
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  20% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-3px, 3px);
+  }
+  40% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(3px, -3px);
+  }
+  60% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  20% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(3px, -3px);
+  }
+  80% {
+    clip-path: inset(5% 0 80% 0);
+    transform: translate(-3px, 3px);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-blink {
+  animation: blink 1.5s step-end infinite;
+}
+
+.animate-glitch-1 {
+  animation: glitch-1 0.3s infinite;
+}
+
+.animate-glitch-2 {
+  animation: glitch-2 0.3s infinite;
+}
+
+.animate-scanline {
+  animation: scanline 8s linear infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Hover transition utilities */
+.transition-game {
+  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-game-fast {
+  transition: all var(--duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Interactive card hover effect */
+.card-hover {
+  transition:
+    transform var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px -10px rgba(0, 255, 255, 0.3);
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.95);
+}
+
+/* Arcade style border animation */
+.border-arcade-animated {
+  position: relative;
+  overflow: hidden;
+}
+
+.border-arcade-animated::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    90deg,
+    var(--neon-pink),
+    var(--neon-cyan),
+    var(--neon-purple),
+    var(--neon-pink)
+  );
+  background-size: 300% 100%;
+  animation: gradient-border 3s linear infinite;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+@keyframes gradient-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* Focus Styles for Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--neon-purple);
+  color: white;
+}
